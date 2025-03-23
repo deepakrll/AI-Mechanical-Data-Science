@@ -30,6 +30,9 @@ display(df.head())
 print("Dataset Summary:\n", df.describe())
 print("\nMissing Values:\n", df.isnull().sum())
 
+# Check class distribution
+print("\nClass Distribution:\n", df['failure'].value_counts())
+
 # Visualize distributions
 plt.figure(figsize=(12, 5))
 sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
@@ -58,8 +61,8 @@ y = df['failure']  # Target
 # Train-test split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Train a Machine Learning Model (Support Vector Machine)
-model = SVC(kernel='linear', random_state=42)
+# Train a Machine Learning Model (Support Vector Machine with class balancing)
+model = SVC(kernel='linear', class_weight='balanced', random_state=42)
 model.fit(X_train, y_train)
 
 # Predictions
@@ -68,7 +71,7 @@ y_pred = model.predict(X_test)
 # Evaluation
 accuracy = accuracy_score(y_test, y_pred)
 print("Accuracy:", accuracy)
-print("Classification Report:\n", classification_report(y_test, y_pred))
+print("Classification Report:\n", classification_report(y_test, y_pred, zero_division=1))
 
 # Confusion Matrix
 plt.figure(figsize=(6,4))
