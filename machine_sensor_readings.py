@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
@@ -29,9 +30,6 @@ display(df.head())
 # Exploratory Data Analysis (EDA)
 print("Dataset Summary:\n", df.describe())
 print("\nMissing Values:\n", df.isnull().sum())
-
-# Check class distribution
-print("\nClass Distribution:\n", df['failure'].value_counts())
 
 # Visualize distributions
 plt.figure(figsize=(12, 5))
@@ -61,8 +59,8 @@ y = df['failure']  # Target
 # Train-test split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Train a Machine Learning Model (Support Vector Machine with class balancing)
-model = SVC(kernel='linear', class_weight='balanced', random_state=42)
+# Train a Machine Learning Model (Random Forest)
+model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 
 # Predictions
@@ -71,7 +69,7 @@ y_pred = model.predict(X_test)
 # Evaluation
 accuracy = accuracy_score(y_test, y_pred)
 print("Accuracy:", accuracy)
-print("Classification Report:\n", classification_report(y_test, y_pred, zero_division=1))
+print("Classification Report:\n", classification_report(y_test, y_pred))
 
 # Confusion Matrix
 plt.figure(figsize=(6,4))
@@ -79,4 +77,12 @@ sns.heatmap(confusion_matrix(y_test, y_pred), annot=True, fmt='d', cmap='Blues')
 plt.xlabel('Predicted')
 plt.ylabel('Actual')
 plt.title('Confusion Matrix')
+plt.show()
+
+# Feature Importance Visualization
+feature_importances = pd.Series(model.feature_importances_, index=X.columns)
+feature_importances.sort_values(ascending=False).plot(kind='bar', figsize=(8, 5))
+plt.title('Feature Importance')
+plt.xlabel('Features')
+plt.ylabel('Importance')
 plt.show()
