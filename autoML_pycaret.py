@@ -1,3 +1,6 @@
+# 🚀 Install & Upgrade Required Libraries
+!pip install --upgrade scipy numpy pandas matplotlib seaborn pycaret
+
 # 🚀 Import Required Libraries
 import pandas as pd
 import numpy as np
@@ -28,7 +31,7 @@ df['Lag_3'] = df['Demand'].shift(3)
 # Drop missing values
 df.dropna(inplace=True)
 
-# 📌 Initialize AutoML with PyCaret
+# 📌 Initialize AutoML with PyCaret (Fixed)
 exp1 = setup(data=df, target='Demand', session_id=42, verbose=False)
 
 # 🚀 Train Multiple Models & Select Best One
@@ -40,7 +43,7 @@ predictions = predict_model(best_model, data=df)
 # ✅ Fixing KeyError by Using 'prediction_label'
 plt.figure(figsize=(12,6))
 plt.plot(df['Demand'].values, label="Actual Demand", linestyle='dashed')
-plt.plot(predictions['prediction_label'], label="Predicted Demand", alpha=0.8)
+plt.plot(predictions['prediction_label'].values, label="Predicted Demand", alpha=0.8)
 plt.title('Actual vs. Predicted Demand using AutoML (PyCaret)')
 plt.xlabel('Time')
 plt.ylabel('Demand')
